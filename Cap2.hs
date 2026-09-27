@@ -141,7 +141,7 @@ lista = [2*x+1 | x<-[0 .. 10], x/=5]
 
 foo :: Char -> Int -> (Int, String)
 foo x y = (y+9, x:[x])
-
+-- foo 'E' 2
 -- Prelude>	fst	('A',"ALO")
 -- 'A'
 -- Prelude>	snd	('A',"ALO")
