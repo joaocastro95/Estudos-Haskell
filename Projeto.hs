@@ -1,5 +1,7 @@
 module Projeto where
 
+import Data.Functor.Contravariant
+
 data Cargo = Estagiario | Programador | Coordenador | Gerente deriving Show
 
 data Pessoa = Pessoa {cargo :: Cargo, nome :: String, idade :: Int} deriving Show
@@ -94,4 +96,56 @@ p2 = Projeto "App" 500 [3]
 -- putStrLn (toJSON joao)
 -- putStrLn (rotinaPromocao joao)
 
+data Indice a = Indice { indice :: Int, dados :: a }
 
+-- rotinas previamente implementadas
+
+instance Functor Indice where
+  fmap f (Indice i dados) = Indice i (f dados)
+
+-- Com a instância de Functor, agora você consegue mexer no dado de dentro sem perder o índice. O fmap aplica a função só no campo dados; o indice passa intacto.
+
+-- No seu arquivo, isso combina com as funções que você já tem. Por exemplo:
+
+-- haskell
+-- joao = Pessoa Programador "Joao" 30
+
+-- fmap promover (Indice 1 joao)
+-- -- Indice 1 (Pessoa Gerente... não: Coordenador "Joao" 30)
+
+-- fmap verSalario (Indice 1 joao)
+-- -- Indice 1 3000.0
+
+-- fmap toJSON (Indice 7 p1)
+-- -- Indice 7 "{nome: \"Site\", ...}"
+
+
+-- 7.1) Faça uma instância de Functor para o tipo Coisa, definido no
+--      início do capítulo 5. A função g deve "ir para dentro" em todas
+--      as coordenadas de Coisa. No caso de ZeroCoisa, o fmap deve
+--      retornar ZeroCoisa.
+
+-- 7.2) Aproveitando o exercício anterior, faça uma instância de
+--      Applicative Functor para o tipo Coisa.
+
+-- 7.3) Crie a função mult234 :: Double -> Coisa Double que multiplica
+--      por 2 a primeira coordenada, por 3 a segunda, e por 4 a terceira.
+--      Use a instância de Applicative feita no exercício anterior.
+
+-- 7.4) Escreva uma instância para Functor e Applicative para o tipo
+--      Arvore, visto no capítulo 5.
+
+-- 7.5) Escreva uma instância de Functor para o tipo
+--      data Fantasma a = Fantasma
+
+-- 7.6) Escreva uma possível instância de Functor para o tipo
+--      data Dupla a = Dupla a Int a
+
+-- 7.7) É possível criar uma instância de Functor para o tipo
+--      Derp a = Derp {runDerp :: Bool -> a}? Justifique e, em caso
+--      positivo, crie a instância de Functor e Applicative.
+
+-- 7.8) (Opcional) Implemente:
+--      * O tipo NovoPred possui um value constructor de mesmo nome,
+--        contendo o campo runNovoPred de tipo Maybe a -> Bool;
+--      * Crie uma instância de Functor Contravariante para o tipo NovoPred.
