@@ -82,7 +82,7 @@ instance Functor Tupla where
 --   Tupla Char
 
 mostra :: Tupla a -> [a]
-mostra (Tupla x,y,z) = [x, y, z]
+mostra (Tupla x y z) = [x, y, z]
 
 -- 4. (2.5 pontos) Avalie as expressões abaixo. Mostre as principais etapas
 --    da avaliação. Não é necessário informar o tipo das expressões.
