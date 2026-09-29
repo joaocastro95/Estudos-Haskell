@@ -42,3 +42,56 @@ rotinaPromocao p = p
 
 rotinaPromocao2 :: Pessoa -> String
 rotinaPromocao2 p = verFolha . promover $ p
+
+
+--Cap5
+
+data Projeto = Projeto { nomeProjeto :: String
+                       , budget      :: Double
+                       , envolvidos  :: [Int]
+                       } deriving Show
+
+class ToJSON a where
+  toJSON :: a -> String
+
+instance ToJSON Pessoa where
+  toJSON p = "{nome: \"" ++ nome p ++
+             "\", cargo: \"" ++ show (cargo p) ++
+             "\", salario: " ++ show (verSalario p) ++ "}"
+
+instance ToJSON Projeto where
+  toJSON p = "{nome: \"" ++ nomeProjeto p ++
+             "\", orcamento: \"" ++ show (budget p) ++
+             "\", envolvidos: " ++ show (envolvidos p) ++ "}"
+
+instance Semigroup Projeto where
+  (Projeto nome1 budget1 env1) <> (Projeto nome2 budget2 env2) =
+    Projeto (nome1 ++ ", " ++ nome2) (budget1 + budget2) (env1 ++ env2)
+
+instance Monoid Projeto where
+  mempty = Projeto "" 0 []
+
+
+--  data Projeto: um registro (record) com três campos nomeados. Cada nome de campo vira automaticamente uma função, ex. budget p devolve o orçamento de p.
+-- class ToJSON: classe própria (não existe no Prelude) com uma função que converte um valor em texto no formato JSON.
+-- instance ToJSON Pessoa / Projeto: montam a string concatenando pedaços com ++. O \" é uma aspa dentro da string. show converte números, listas etc. em texto.
+-- instance Semigroup Projeto: define como juntar dois projetos: nomes separados por vírgula, orçamentos somados, listas de envolvidos concatenadas. Usa pattern matching para desmontar cada projeto nos seus campos.
+-- instance Monoid Projeto: o elemento neutro é um projeto vazio (nome "", orçamento 0, ninguém envolvido). Juntar qualquer projeto com ele não muda nada... quase: o nome ganharia um ", " sobrando, detalhe que o livro não trata.
+
+p1 = Projeto "Site" 1000 [1,2]
+p2 = Projeto "App" 500 [3]
+
+-- toJSON (p1 <> p2)
+-- -- "{nome: \"Site, App\", orçamento: \"1500.0\", envolvidos: [1,2,3]}"
+
+-- mconcat [p1, p2]
+
+-- toJSON p1
+-- putStrLn (toJSON (p1 <> p2))
+-- mconcat [p1, p2]
+
+-- joao = Pessoa Programador "Joao" 30
+-- putStrLn (toJSON joao)
+-- putStrLn (rotinaPromocao joao)
+
+
